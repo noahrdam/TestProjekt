@@ -18,6 +18,22 @@ public class PN : Ordination {
     /// </summary>
     public bool givDosis(Dato givesDen) {
         // TODO: Implement!
+
+        if (dates.Count == 0)
+        {
+            if (givesDen.dato >= startDen && givesDen.dato <= slutDen)
+            {
+                dates.Add(givesDen);
+                return true;
+            }
+        } else
+        {
+            if (givesDen.dato >= startDen && givesDen.dato <= slutDen && givesDen.dato > dates.Last().dato)
+            {
+                dates.Add(givesDen);
+                return true;
+            }
+        }
         return false;
     }
 
