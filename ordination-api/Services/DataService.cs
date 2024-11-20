@@ -148,9 +148,23 @@ public class DataService
         return null!;
     }
 
-    public string AnvendOrdination(int id, Dato dato) {
-        // TODO: Implement!
-        return null!;
+    public string AnvendOrdination(int id, Dato dato)
+    {
+        var ordination = db.Find<PN>(id);
+
+        if (ordination == null)
+        {
+            return "Fejl: Ordination ikke fundet";
+        }
+
+        bool dosisGivet = ordination.givDosis(dato);
+
+        if (!dosisGivet)
+        {
+            return "Fejl: Dosis kan ikke gives udenfor ordinationens gyldige periode.";
+        }
+
+        return "Dosis givet";
     }
 
     /// <summary>
