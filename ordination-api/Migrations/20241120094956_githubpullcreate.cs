@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ordination_api.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class githubpullcreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
