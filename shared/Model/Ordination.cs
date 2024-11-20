@@ -22,7 +22,7 @@ public abstract class Ordination {
     /// </summary>
     public int antalDage() {
 
-        int antalDage = slutDen.Subtract(startDen).Days;
+        int antalDage = slutDen.Subtract(startDen).Days +1;
 
         return antalDage;
     }
