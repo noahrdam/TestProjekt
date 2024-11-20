@@ -53,4 +53,27 @@ public class ServiceTest
 
         Console.WriteLine("Her kommer der ikke en exception. Testen fejler.");
     }
-}
+
+    [TestMethod]
+    public void TestDoegnDosis_DagligSkaev()
+    {
+        // Arrange
+        var startDen = new DateTime(2023, 1, 1);
+        var slutDen = new DateTime(2023, 1, 10);
+        var laegemiddel = new Laegemiddel("TestMed", 1.0, 1.0, 1.0, "mg");
+        var doser = new Dosis[]
+        {
+            new Dosis(new DateTime(2023, 1, 1, 8, 0, 0), 1.0),
+            new Dosis(new DateTime(2023, 1, 1, 12, 0, 0), 2.0),
+            new Dosis(new DateTime(2023, 1, 1, 18, 0, 0), 3.0),
+            new Dosis(new DateTime(2023, 1, 1, 22, 0, 0), 4.0)
+        };
+        var dagligSkaev = new DagligSkæv(startDen, slutDen, laegemiddel, doser);
+
+        // Act
+        double result = dagligSkaev.doegnDosis();
+
+        // Assert
+        Assert.AreEqual(10.0, result);
+    }
+    }
