@@ -19,13 +19,23 @@ public class PN : Ordination
     /// Returnerer true hvis givesDen er inden for ordinationens gyldighedsperiode og datoen huskes
     /// Returner false ellers og datoen givesDen ignoreres
     /// </summary>
+    public bool givDosis(Dato givesDen) {
+        // TODO: Implement!
 
-    public bool givDosis(Dato givesDen)
-    {
-        if (givesDen.dato >= startDen && givesDen.dato <= slutDen)
+        if (dates.Count == 0)
         {
-            dates.Add(givesDen); 
-            return true;
+            if (givesDen.dato >= startDen && givesDen.dato <= slutDen)
+            {
+                dates.Add(givesDen);
+                return true;
+            }
+        } else
+        {
+            if (givesDen.dato >= startDen && givesDen.dato <= slutDen && givesDen.dato > dates.Last().dato)
+            {
+                dates.Add(givesDen);
+                return true;
+            }
         }
         return false;
     }
