@@ -162,7 +162,24 @@ public class DataService
 
     public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] doser, DateTime startDato, DateTime slutDato) {
         // TODO: Implement!
-        return null!;
+
+        Patient patient = db.Patienter.Include(p => p.ordinationer).FirstOrDefault(p => p.PatientId == patientId)!;
+        Laegemiddel laegemiddel = db.Laegemiddler.Find(laegemiddelId)!;
+
+        if (patient == null || laegemiddel == null)
+            throw new ArgumentException("Patient eller lægemiddel ikke fundet!");
+
+        // Opret ordination
+        DagligSkæv dagligSkæv = new DagligSkæv(startDato, slutDato, laegemiddel);
+
+        dagligSkæv.doser = doser.ToList();
+
+        patient.ordinationer.Add(dagligSkæv);
+
+        db.SaveChanges();
+
+
+        return dagligSkæv;
     }
 
     public string AnvendOrdination(int id, Dato dato) {
