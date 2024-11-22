@@ -18,7 +18,7 @@ namespace shared.Model
         /// <summary>
         /// Registrerer at der er givet en dosis på dagen givesDen
         /// Returnerer true hvis givesDen er inden for ordinationens gyldighedsperiode og datoen huskes
-        /// Returner false ellers og datoen givesDen ignoreres
+        /// Returner false ellers og datoen givesDen ignoreresss
         /// </summary>
         public bool givDosis(Dato givesDen)
         {
