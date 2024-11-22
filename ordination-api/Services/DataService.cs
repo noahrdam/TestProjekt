@@ -131,8 +131,19 @@ public class DataService
     }
 
     public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato) {
-        // TODO: Implement!
-        return null!;
+        var patient = db.Patienter.Find(patientId);
+        var laegemiddel = db.Laegemiddler.Find(laegemiddelId);
+
+        if (patient == null || laegemiddel == null) {
+            throw new ArgumentException("Invalid patient or laegemiddel ID");
+        }
+
+        var pn = new PN(startDato, slutDato, antal, laegemiddel);
+        db.Ordinationer.Add(pn);
+        patient.ordinationer.Add(pn);
+        db.SaveChanges();
+
+        return pn;
     }
 
     public DagligFast OpretDagligFast(int patientId, int laegemiddelId, 

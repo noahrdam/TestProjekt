@@ -8,9 +8,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="112b2918-37db-4e8f-99a2-89c2e262cf35" name="Changes" comment="Dagligskæv">
-      <change beforePath="$PROJECT_DIR$/shared/Model/DagligSkæv.cs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/Model/DagligSkæv.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/Model/PN.cs" beforeDir="false" afterPath="$PROJECT_DIR$/shared/Model/PN.cs" afterDir="false" />
+    <list default="true" id="112b2918-37db-4e8f-99a2-89c2e262cf35" name="Changes" comment="Her, igen">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ordination/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ordination/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,7 +142,7 @@
       <workItem from="1732093669850" duration="372000" />
       <workItem from="1732094578876" duration="432000" />
       <workItem from="1732095303528" duration="234000" />
-      <workItem from="1732095560801" duration="11441000" />
+      <workItem from="1732095560801" duration="14849000" />
     </task>
     <task id="LOCAL-00001" summary="Dagligskæv">
       <option name="closed" value="true" />
@@ -153,7 +152,23 @@
       <option name="project" value="LOCAL" />
       <updated>1732097817354</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Metoder">
+      <option name="closed" value="true" />
+      <created>1732263198444</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1732263198444</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Her, igen">
+      <option name="closed" value="true" />
+      <created>1732263232616</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1732263232616</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -175,6 +190,8 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Dagligskæv" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dagligskæv" />
+    <MESSAGE value="Metoder" />
+    <MESSAGE value="Her, igen" />
+    <option name="LAST_COMMIT_MESSAGE" value="Her, igen" />
   </component>
 </project>
