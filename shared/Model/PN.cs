@@ -29,18 +29,19 @@ namespace shared.Model
         public override double doegnDosis()
         {
             double sum = 0;
+            
             Console.WriteLine("Enter");
+            
             if (dates.Count > 0)
             {
                 DateTime min = dates.First().dato;
                 DateTime max = dates.First().dato;
-                foreach (Dato d in dates)
-                {
+                
+                foreach (Dato d in dates) {
                     if (d.dato < min)
                     {
                         min = d.dato;
                     }
-
                     if (d.dato > max)
                     {
                         max = d.dato;

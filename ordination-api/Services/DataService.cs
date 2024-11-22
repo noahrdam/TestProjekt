@@ -135,7 +135,7 @@ public class DataService
         var laegemiddel = db.Laegemiddler.Find(laegemiddelId);
 
         if (patient == null || laegemiddel == null) {
-            throw new ArgumentException("Invalid patient or laegemiddel ID");
+            throw new ArgumentException("Der ikke noen patient");
         }
 
         var pn = new PN(startDato, slutDato, antal, laegemiddel);
