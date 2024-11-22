@@ -40,12 +40,33 @@ public class PN : Ordination
         return false;
     }
 
-
-
     public override double doegnDosis()
     {
-        // TODO: Implement!
-        return -1;
+        double sum = 0;
+            
+        Console.WriteLine("Enter");
+            
+        if (dates.Count > 0)
+        {
+            DateTime min = dates.First().dato;
+            DateTime max = dates.First().dato;
+                
+            foreach (Dato d in dates) {
+                if (d.dato < min)
+                {
+                    min = d.dato;
+                }
+                if (d.dato > max)
+                {
+                    max = d.dato;
+                }
+            }
+
+            int dage = (int)(max - min).TotalDays + 1;
+            Console.WriteLine("Dage: " + dage);
+            sum = samletDosis() / dage;
+        }
+        return sum;
     }
 
 

@@ -131,8 +131,15 @@ public class DataService
     }
 
     public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato) {
-        // TODO: Implement!
-        return null!;
+        Patient patient = db.Patienter.Include(p => p.ordinationer).FirstOrDefault(p => p.PatientId == patientId)!;
+        Laegemiddel laegemiddel = db.Laegemiddler.Find(laegemiddelId)!;
+
+        if (patient == null || laegemiddel == null)
+            throw new ArgumentException("Patient eller lægemiddel ikke fundet!!!");
+        PN pn = new PN(startDato, slutDato, antal, laegemiddel);
+        patient.ordinationer.Add(pn);
+        db.SaveChanges();
+        return pn;
     }
 
     public DagligFast OpretDagligFast(int patientId, int laegemiddelId,
