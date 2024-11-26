@@ -191,21 +191,19 @@ public class DataService
 
     public string AnvendOrdination(int id, Dato dato)
     {
-        var ordination = db.Find<PN>(id);
+          PN pn = db.PNs.Find(id);
+        bool test = pn.givDosis(dato);
+        db.SaveChanges();
 
-        if (ordination == null)
+        if (test)
         {
-            return "Fejl: Ordination ikke fundet";
+            return "Dosis givet";
         }
 
-        bool dosisGivet = ordination.givDosis(dato);
-
-        if (!dosisGivet)
+        else
         {
-            return "Fejl: Dosis kan ikke gives udenfor ordinationens gyldige periode.";
+            return "Dosis ikke givet";
         }
-
-        return "Dosis givet";
     }
 
     /// <summary>
