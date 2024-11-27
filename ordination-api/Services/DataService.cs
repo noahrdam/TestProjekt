@@ -137,6 +137,16 @@ public class DataService
         if (patient == null || laegemiddel == null)
             throw new ArgumentException("Patient eller lægemiddel ikke fundet!!!");
         PN pn = new PN(startDato, slutDato, antal, laegemiddel);
+
+        if (pn.startDen > pn.slutDen)
+        {
+            throw new ArgumentException("Startdato er efter slutdato");
+        }
+        else if (antal <= 0)
+        {
+            throw new ArgumentException("Antal er 0 eller mindre");
+        }
+
         patient.ordinationer.Add(pn);
         db.SaveChanges();
         return pn;
@@ -147,6 +157,15 @@ public class DataService
     DateTime startDato, DateTime slutDato)
     {
 
+        if (antalMorgen < 0)
+            throw new ArgumentException("Antal Morgen må ikke være negativ.");
+        if (antalMiddag < 0)
+            throw new ArgumentException("Antal Middag må ikke være negativ.");
+        if (antalAften < 0)
+            throw new ArgumentException("Antal Aften må ikke være negativ.");
+        if (antalNat < 0)
+            throw new ArgumentException("Antal Nat må ikke være negativ.");
+
         // Find patient og lægemiddel
         Patient patient = db.Patienter.Include(p => p.ordinationer).FirstOrDefault(p => p.PatientId == patientId)!;
         Laegemiddel laegemiddel = db.Laegemiddler.Find(laegemiddelId)!;
@@ -154,16 +173,32 @@ public class DataService
         if (patient == null || laegemiddel == null)
             throw new ArgumentException("Patient eller lægemiddel ikke fundet!");
 
+        
+
         // Opret ordination
         DagligFast dagligFast = new DagligFast(startDato, slutDato, laegemiddel, antalMorgen, antalMiddag, antalAften, antalNat);
+        
+        double samletdosis = antalMorgen + antalMiddag + antalAften + antalNat;
 
-        // Tilføj til patientens ordinationer
-        patient.ordinationer.Add(dagligFast);
+        if (samletdosis <= 0)
+        {
+            throw new ArgumentException("Samlet dosis er 0 eller mindre");
+        }
+        else if (dagligFast.startDen > dagligFast.slutDen)
+        {
+            throw new ArgumentException("Startdato er efter slutdato");
+        }
+        else
+        {
+            // Tilføj til patientens ordinationer
+            patient.ordinationer.Add(dagligFast);
 
-        // Gem i databasen
-        db.SaveChanges();
+            // Gem i databasen
+            db.SaveChanges();
 
-        return dagligFast;
+            return dagligFast;
+        }
+        
     }
 
 
@@ -176,10 +211,17 @@ public class DataService
         if (patient == null || laegemiddel == null)
             throw new ArgumentException("Patient eller lægemiddel ikke fundet!");
 
+        double anbefaletdosis = GetAnbefaletDosisPerDøgn(patientId, laegemiddelId);
+
         // Opret ordination
         DagligSkæv dagligSkæv = new DagligSkæv(startDato, slutDato, laegemiddel);
 
         dagligSkæv.doser = doser.ToList();
+
+        if (dagligSkæv.startDen > dagligSkæv.slutDen)
+        {
+            throw new ArgumentException("Startdato er efter slutdato");
+        }
 
         patient.ordinationer.Add(dagligSkæv);
 
@@ -191,7 +233,13 @@ public class DataService
 
     public string AnvendOrdination(int id, Dato dato)
     {
-          PN pn = db.PNs.Find(id);
+        PN pn = db.PNs.Find(id);
+
+        if(pn.startDen > dato.dato || pn.slutDen < dato.dato)
+        {
+            throw new ArgumentException("Dato er udenfor ordinationens gyldighedsperiode");
+        }
+
         bool test = pn.givDosis(dato);
         db.SaveChanges();
 
