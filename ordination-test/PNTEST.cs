@@ -7,7 +7,7 @@ namespace ordination_test
     [TestClass]
     public class PNTEST
     {
-        // TC14: EQ5 - Tester at dosis ikke kan være -1
+        // TC14: EQ5 - Tester at dosis ikke kan være -1 altssånegativ
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void OpretPN_NegativDosis_KasterArgumentException()
@@ -16,7 +16,7 @@ namespace ordination_test
             var slutDato = startDato.AddDays(1);
             var laegemiddel = new Laegemiddel();  
 
-            PN pn = new PN(startDato, slutDato, -1, laegemiddel); // Fejl da dosis ikke kan være negativ
+            PN pn = new PN(startDato, slutDato, -1, laegemiddel); // Fejl da dosis ikke kan være negativ;)
         }
 
         // TC15: EQ5 - Tester at dosis ikke kan være 0
@@ -28,10 +28,10 @@ namespace ordination_test
             var slutDato = startDato.AddDays(1);
             var laegemiddel = new Laegemiddel();  
 
-            PN pn = new PN(startDato, slutDato, 0, laegemiddel); // Fejl da dosis ikke kan være 0
+            PN pn = new PN(startDato, slutDato, 0, laegemiddel); 
         }
 
-        // TC16: EQ5 - Tester at dosis kan være 100 
+        // TC16: EQ5 - Tester at dosis kan være 100 skal virkew
         [TestMethod]
         public void OpretPN_ValidDosis_ReturnererKorrektObjekt()
         {
@@ -54,7 +54,7 @@ namespace ordination_test
             var slutDato = new DateTime(2024, 11, 20); 
             var laegemiddel = new Laegemiddel();  
 
-            PN pn = new PN(startDato, slutDato, 1, laegemiddel); // fejl, startdato er senere end slutdato
+            PN pn = new PN(startDato, slutDato, 1, laegemiddel); 
         }
 
         // TC18: EQ6 - Teste(startdato = slutdato)
@@ -65,10 +65,10 @@ namespace ordination_test
             var slutDato = new DateTime(2024, 11, 24);  
             var laegemiddel = new Laegemiddel();  
 
-            PN pn = new PN(startDato, slutDato, 1, laegemiddel); // Success da startdato = slutdato
+            PN pn = new PN(startDato, slutDato, 1, laegemiddel); 
 
             Assert.IsNotNull(pn); 
-            Assert.AreEqual(startDato, pn.startDen); // Startdato og slutdato skal være ens
+            Assert.AreEqual(startDato, pn.startDen); 
             Assert.AreEqual(slutDato, pn.slutDen); 
         }
 
@@ -83,7 +83,7 @@ namespace ordination_test
 
             var anvendelse = new Dato { dato = new DateTime(2024, 11, 22) };
 
-            var resultat = pn.givDosis(anvendelse); // Fejl da datoen er før gyldighedsperioden
+            var resultat = pn.givDosis(anvendelse); 
 
             Assert.IsFalse(resultat); 
         }
@@ -99,7 +99,7 @@ namespace ordination_test
 
             var anvendelse = new Dato { dato = new DateTime(2024, 11, 23) };
 
-            var resultat = pn.givDosis(anvendelse); // Success da datoen er indenfor gyldighedsperioden
+            var resultat = pn.givDosis(anvendelse);
 
             Assert.IsTrue(resultat); 
         }
@@ -115,12 +115,12 @@ namespace ordination_test
 
             var anvendelse = new Dato { dato = new DateTime(2024, 11, 25) };
 
-            var resultat = pn.givDosis(anvendelse); // Success da datoen er indenfor gyldighedsperioden
+            var resultat = pn.givDosis(anvendelse); 
 
             Assert.IsTrue(resultat); 
         }
 
-        // TC22: EQ7 - Anvend Ordination den 26/11/2024 (Success)
+        // TC22: EQ7 - Anvend Ordination den 26/11/2024 
         [TestMethod]
         public void GivDosis_26Nov2024_Success()
         {
@@ -136,7 +136,7 @@ namespace ordination_test
             Assert.IsTrue(resultat); 
         }
 
-       // EQ7 - Anvend Ordination den 27/11/2024 (Fejl)
+       // EQ7 - Anvend Ordination den 27/11/2024 
         [TestMethod]
         public void GivDosis_27Nov2024_Fejl()
         {
