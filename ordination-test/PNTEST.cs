@@ -31,7 +31,7 @@ namespace ordination_test
             PN pn = new PN(startDato, slutDato, 0, laegemiddel); // Fejl da dosis ikke kan være 0
         }
 
-        // TC16: EQ5 - Tester at dosis kan være 100 (gyldig dosis)
+        // TC16: EQ5 - Tester at dosis kan være 100 
         [TestMethod]
         public void OpretPN_ValidDosis_ReturnererKorrektObjekt()
         {
@@ -45,7 +45,7 @@ namespace ordination_test
             Assert.AreEqual(100, pn.antalEnheder); // Dosis skal være 100
         }
 
-        // TC17: EQ6 - Tester at startdato er senere end slutdato
+        // TC17: EQ6 - Tester at startdatosenere end slutdato
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void OpretPN_StartdatoErSenereEndSlutdato_KasterArgumentException()
@@ -54,10 +54,10 @@ namespace ordination_test
             var slutDato = new DateTime(2024, 11, 20); 
             var laegemiddel = new Laegemiddel();  
 
-            PN pn = new PN(startDato, slutDato, 1, laegemiddel); // Fejl, da startdato er senere end slutdato
+            PN pn = new PN(startDato, slutDato, 1, laegemiddel); // fejl, startdato er senere end slutdato
         }
 
-        // TC18: EQ6 - Tester at startdato og slutdato er gyldige (startdato = slutdato)
+        // TC18: EQ6 - Teste(startdato = slutdato)
         [TestMethod]
         public void OpretPN_StartdatoLigeSlutdato_Success()
         {
@@ -131,7 +131,7 @@ namespace ordination_test
 
             var anvendelse = new Dato { dato = new DateTime(2024, 11, 26) };
 
-            var resultat = pn.givDosis(anvendelse); // Success da datoen er indenfor gyldighedsperioden
+            var resultat = pn.givDosis(anvendelse); 
 
             Assert.IsTrue(resultat); 
         }
@@ -147,7 +147,7 @@ namespace ordination_test
 
             var anvendelse = new Dato { dato = new DateTime(2024, 11, 27) };
 
-            var resultat = pn.givDosis(anvendelse); // Fejl da datoen er udenfor gyldighedsperioden
+            var resultat = pn.givDosis(anvendelse);
 
             Assert.IsFalse(resultat); 
         }
