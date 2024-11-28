@@ -10,6 +10,7 @@ public class Dosis
     {
         this.tid = tid;
         this.antal = antal;
+
     }
 
     public Dosis()

@@ -136,6 +136,7 @@ public class DataService
 
         if (patient == null || laegemiddel == null)
             throw new ArgumentException("Patient eller lægemiddel ikke fundet!!!");
+
         PN pn = new PN(startDato, slutDato, antal, laegemiddel);
 
         if (pn.startDen > pn.slutDen)
