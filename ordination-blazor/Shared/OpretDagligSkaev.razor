@@ -113,6 +113,11 @@
     private void OpretDosis() {
         Console.WriteLine(Tid);
         Console.WriteLine(Antal);
+
+        if (Antal == 0)
+        {
+            return;
+        }
         doser.Add(new Dosis(Util.CreateTimeOnly(Tid), Antal));
     }
 

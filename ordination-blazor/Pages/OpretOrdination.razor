@@ -119,13 +119,34 @@
         }
     }
 
-    private void ClickOpret() {
-        if (type == OrdinationType.PN) {
-            PageState = State.OpretPN;
-        } else if (type == OrdinationType.DagligFast) {
-            PageState = State.OpretFast;
-        } else if (type == OrdinationType.DagligSkaev) {
-            PageState = State.OpretSkaev;
+    private void ClickOpret()
+    {
+        // Tjek om både patient og lægemiddel er valgt
+        if (patient == null)
+        {
+            message = "Du skal vælge en patient.";
+        }
+        else if (laegemiddel == null)
+        {
+            message = "Du skal vælge et lægemiddel.";
+        }
+        else
+        {
+            // Skift til den passende side baseret på typen
+            if (type == OrdinationType.PN)
+            {
+                PageState = State.OpretPN;
+            }
+            else if (type == OrdinationType.DagligFast)
+            {
+                PageState = State.OpretFast;
+            }
+            else if (type == OrdinationType.DagligSkaev)
+            {
+                PageState = State.OpretSkaev;
+            }
+            return;
         }
     }
+
 }

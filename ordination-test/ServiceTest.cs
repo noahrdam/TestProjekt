@@ -111,35 +111,132 @@ public class ServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestOpretDagligSkaevTC7()
+    public void TestOpretDagligSkaev_TC7()
     {
+        Patient patient = service.GetPatienter().First();
+        Laegemiddel lm = service.GetLaegemidler().First();
+        DateTime startDato = DateTime.Now;
+        DateTime slutDato = DateTime.Now.AddDays(5);
 
+        // EQ3: Ugyldig (negativ dosis)
+        Dosis[] doser = new[]
+        {
+            new Dosis(DateTime.Now, -1.0),
+        };
+
+        // Act
+        var dagligSkaev = service.OpretDagligSkaev(patient.PatientId, lm.LaegemiddelId, doser, startDato, slutDato);
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestOpretDagligSkaevTC8()
+    public void TestOpretDagligSkaev_TC8()
     {
+        Patient patient = service.GetPatienter().First();
+        Laegemiddel lm = service.GetLaegemidler().First();
+        DateTime startDato = DateTime.Now;
+        DateTime slutDato = DateTime.Now.AddDays(5);
+
+        // EQ3: Ugyldig (dosis = 0)
+        Dosis[] doser = new[]
+        {
+            new Dosis(DateTime.Now, 0.0),
+        };
+
+        // Act
+        var dagligSkaev = service.OpretDagligSkaev(patient.PatientId, lm.LaegemiddelId, doser, startDato, slutDato);
+    }
+
+    [TestMethod]
+    public void TestOpretDagligSkaev_TC9()
+    {
+        // Arrange
+        // Seed data: Patient "Jane Jensen" (63.4 kg) and Medication "Acetylsalicylsyre"
+        Patient patient = service.GetPatienter().First(p => p.cprnr == "121256-0512");
+        Laegemiddel laegemiddel = service.GetLaegemidler().First(lm => lm.navn == "Acetylsalicylsyre");
+
+        DateTime startDato = DateTime.Now;
+        DateTime slutDato = DateTime.Now.AddDays(5);
+
+        // Calculate recommended dose for "Jane Jensen" and "Acetylsalicylsyre"
+        double anbefaletDosis = service.GetAnbefaletDosisPerDøgn(patient.PatientId, laegemiddel.LaegemiddelId);
+
+        // Create doses that does not exceed the recommended dose (e.g., total dose > 9.51)
+        Dosis[] doser = new[]
+        {
+            new Dosis(DateTime.Now, 3.0),
+            new Dosis(DateTime.Now, 3.0) // Total = 6.0 < 9.51
+        };
+
+        // Act
+        // EQ3: Gyldig (total dosis < anbefalet dosis)
+        var dagligSkaev = service.OpretDagligSkaev(patient.PatientId, laegemiddel.LaegemiddelId, doser, startDato, slutDato);
+        Assert.IsNotNull(dagligSkaev, "DagligSkæv-ordinationen blev ikke oprettet.");
 
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void TestOpretDagligSkaevTC9()
+    public void TestOpretDagligSkaev_TC10()
     {
+        // Arrange
+        // Seed data: Patient "Jane Jensen" (63.4 kg) and Medication "Acetylsalicylsyre"
+        Patient patient = service.GetPatienter().First(p => p.cprnr == "121256-0512");
+        Laegemiddel laegemiddel = service.GetLaegemidler().First(lm => lm.navn == "Acetylsalicylsyre");
+
+        DateTime startDato = DateTime.Now;
+        DateTime slutDato = DateTime.Now.AddDays(5);
+
+        // Calculate recommended dose for "Jane Jensen" and "Acetylsalicylsyre"
+        double anbefaletDosis = service.GetAnbefaletDosisPerDøgn(patient.PatientId, laegemiddel.LaegemiddelId);
+
+        // Create doses is the recommended dose (e.g., total dose > 9.51)
+        Dosis[] doser = new[]
+        {
+            new Dosis(DateTime.Now, 9.0),
+            new Dosis(DateTime.Now, 0.51) // Total = 9.51 = 9.51
+        };
+
+        // Act
+        //EQ3: Gyldig (total dosis = anbefalet dosis)
+        var dagligSkaev = service.OpretDagligSkaev(patient.PatientId, laegemiddel.LaegemiddelId, doser, startDato, slutDato);
+        Assert.IsNotNull(dagligSkaev, "DagligSkæv-ordinationen blev ikke oprettet.");
 
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void TestOpretDagligSkaevTC10()
-    {
 
-    }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void TestOpretDagligSkaev_TC11()
+    {
+        // Arrange
+        // Seed data: Patient "Jane Jensen" (63.4 kg) and Medication "Acetylsalicylsyre"
+        Patient patient = service.GetPatienter().First(p => p.cprnr == "121256-0512");
+        Laegemiddel laegemiddel = service.GetLaegemidler().First(lm => lm.navn == "Acetylsalicylsyre");
+
+        DateTime startDato = DateTime.Now;
+        DateTime slutDato = DateTime.Now.AddDays(5);
+
+        // Calculate recommended dose for "Jane Jensen" and "Acetylsalicylsyre"
+        double anbefaletDosis = service.GetAnbefaletDosisPerDøgn(patient.PatientId, laegemiddel.LaegemiddelId);
+
+        // Create doses that exceed the recommended dose (e.g., total dose > 9.51)
+        Dosis[] doser = new[]
+        {
+            new Dosis(DateTime.Now, 5.0),
+            new Dosis(DateTime.Now, 5.0) // Total = 6.0 < 9.51
+        };
+
+        // Act
+        // EQ3: Ugyldig (total dosis > anbefalet dosis)
+        service.OpretDagligSkaev(patient.PatientId, laegemiddel.LaegemiddelId, doser, startDato, slutDato);
+    }
+
+  
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void TestOpretDagligSkaev_TC12()
     {
         Patient patient = service.GetPatienter().First();
         Laegemiddel lm = service.GetLaegemidler().First();
@@ -154,7 +251,7 @@ public class ServiceTest
 
 
     [TestMethod]
-    public void TestOpretDagligSkaev_TC12()
+    public void TestOpretDagligSkaev_TC13()
     {
         // Arrange
         Patient patient = service.GetPatienter().First();
@@ -180,7 +277,7 @@ public class ServiceTest
 
 
     [TestMethod]
-    public void TestOpretDagligSkaev_TC13()
+    public void TestOpretDagligSkaev_TC14()
     {
         // Arrange
         Patient patient = service.GetPatienter().First();
@@ -209,7 +306,7 @@ public class ServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestOpretPN_TC14()
+    public void TestOpretPN_TC15()
     {
         Patient patient = service.GetPatienter().First();
         Laegemiddel lm = service.GetLaegemidler().First();
@@ -220,7 +317,7 @@ public class ServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestOpretPNTC15()
+    public void TestOpretPN_TC16()
     {
         Patient patient = service.GetPatienter().First();
         Laegemiddel lm = service.GetLaegemidler().First();
@@ -230,7 +327,7 @@ public class ServiceTest
     }
 
     [TestMethod]
-    public void TestOpretPN_TC16()
+    public void TestOpretPN_TC17()
     {
         // Arrange: Opsæt testdata
         Patient patient = service.GetPatienter().First();
@@ -253,7 +350,7 @@ public class ServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestOpretPN_TC17()
+    public void TestOpretPN_TC18()
     {
         Patient patient = service.GetPatienter().First();
         Laegemiddel lm = service.GetLaegemidler().First();
@@ -264,7 +361,7 @@ public class ServiceTest
 
 
     [TestMethod]
-    public void TestOpretPNTC18()
+    public void TestOpretPN_TC19()
     {
         // Arrange: Opsæt testdata
         Patient patient = service.GetPatienter().First();
@@ -291,7 +388,7 @@ public class ServiceTest
 
 
     [TestMethod]
-    public void TestOpretPN_TC19()
+    public void TestOpretPN_TC20()
     {
         // Arrange
         Patient patient = service.GetPatienter().First();
@@ -311,7 +408,7 @@ public class ServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestAnvendOrdinationPN_TC20()
+    public void TestAnvendOrdinationPN_TC21()
     {
         PN pn = service.GetPNs().First();
         DateTime dato = pn.startDen.AddDays(-1); // Dato før gyldighedsperioden
@@ -321,7 +418,7 @@ public class ServiceTest
     }
 
     [TestMethod]
-    public void TestAnvendOrdinationPN_TC21()
+    public void TestAnvendOrdinationPN_TC22()
     {
         // Arrange
         PN pn = service.GetPNs().First();
@@ -335,7 +432,7 @@ public class ServiceTest
     }
 
     [TestMethod]
-    public void TestAnvendOrdinationPN_TC22()
+    public void TestAnvendOrdinationPN_TC23()
     {
         // Arrange
         PN pn = service.GetPNs().First();
@@ -349,7 +446,7 @@ public class ServiceTest
     }
 
     [TestMethod]
-    public void TestAnvendOrdinationPN_TC23()
+    public void TestAnvendOrdinationPN_TC24()
     {
         // Arrange
         PN pn = service.GetPNs().First();
@@ -364,7 +461,7 @@ public class ServiceTest
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void TestAnvendOrdinationPN_TC24()
+    public void TestAnvendOrdinationPN_TC25()
     {
         PN pn = service.GetPNs().First();
         DateTime dato = pn.slutDen.AddDays(1); // Dato efter gyldighedsperioden
@@ -373,5 +470,6 @@ public class ServiceTest
         service.AnvendOrdination(pn.OrdinationId, new Dato { dato = dato });
     }
 
+    
 
 }

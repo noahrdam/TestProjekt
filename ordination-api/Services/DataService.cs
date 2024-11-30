@@ -158,61 +158,84 @@ public class DataService
     DateTime startDato, DateTime slutDato)
     {
 
-        if (antalMorgen < 0)
-            throw new ArgumentException("Antal Morgen må ikke være negativ.");
-        if (antalMiddag < 0)
-            throw new ArgumentException("Antal Middag må ikke være negativ.");
-        if (antalAften < 0)
-            throw new ArgumentException("Antal Aften må ikke være negativ.");
-        if (antalNat < 0)
-            throw new ArgumentException("Antal Nat må ikke være negativ.");
-
         // Find patient og lægemiddel
         Patient patient = db.Patienter.Include(p => p.ordinationer).FirstOrDefault(p => p.PatientId == patientId)!;
         Laegemiddel laegemiddel = db.Laegemiddler.Find(laegemiddelId)!;
 
+        // Tjek om patient og lægemiddel findes
         if (patient == null || laegemiddel == null)
+        {
             throw new ArgumentException("Patient eller lægemiddel ikke fundet!");
+        }
+
+        // Tjek om dosis er gyldig
+        if (antalMorgen < 0 || antalMiddag < 0 || antalAften < 0 || antalNat < 0)
+        {
+            throw new ArgumentException("Dosis mængde må ikke være negativ");
+        }
+
+        if (antalMorgen == 0 && antalMiddag == 0 && antalAften == 0 && antalNat == 0)
+        {
+            throw new ArgumentException("Dosis mængde må ikke være 0");
+        }
 
         
+
 
         // Opret ordination
         DagligFast dagligFast = new DagligFast(startDato, slutDato, laegemiddel, antalMorgen, antalMiddag, antalAften, antalNat);
         
         double samletdosis = antalMorgen + antalMiddag + antalAften + antalNat;
 
-        if (samletdosis <= 0)
-        {
-            throw new ArgumentException("Samlet dosis er 0 eller mindre");
-        }
-        else if (dagligFast.startDen > dagligFast.slutDen)
+        // Tjek om dato er gyldig
+        if (dagligFast.startDen > dagligFast.slutDen)
         {
             throw new ArgumentException("Startdato er efter slutdato");
         }
-        else
-        {
-            // Tilføj til patientens ordinationer
-            patient.ordinationer.Add(dagligFast);
+        
+        // Tilføj til patientens ordinationer
+        patient.ordinationer.Add(dagligFast);
 
-            // Gem i databasen
-            db.SaveChanges();
-
-            return dagligFast;
-        }
+        // Gem i databasen
+        db.SaveChanges();
+        
+        return dagligFast;
+        
         
     }
 
 
     public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] doser, DateTime startDato, DateTime slutDato) {
-        // TODO: Implement!
 
         Patient patient = db.Patienter.Include(p => p.ordinationer).FirstOrDefault(p => p.PatientId == patientId)!;
         Laegemiddel laegemiddel = db.Laegemiddler.Find(laegemiddelId)!;
 
-        if (patient == null || laegemiddel == null)
-            throw new ArgumentException("Patient eller lægemiddel ikke fundet!");
-
         double anbefaletdosis = GetAnbefaletDosisPerDøgn(patientId, laegemiddelId);
+        double samletdosis = doser.Sum(d => d.antal);
+
+
+        // Tjek om patient og lægemiddel findes
+        if (patient == null || laegemiddel == null)
+        {
+            throw new ArgumentException("Patient eller lægemiddel ikke fundet!");
+        }
+
+        foreach (Dosis dosis in doser)
+        {
+            if (dosis.antal < 0 )
+            {
+                throw new ArgumentException("Dosis mængde må ikke være negativ");
+            }
+            else if (dosis.antal == 0)
+            {
+                throw new ArgumentException("Dosis mængde må ikke være 0");
+            }
+        }
+
+        if (samletdosis > anbefaletdosis)
+        {
+            throw new ArgumentException("Samlet dosis overskrider anbefalet dosis");
+        }
 
         // Opret ordination
         DagligSkæv dagligSkæv = new DagligSkæv(startDato, slutDato, laegemiddel);
